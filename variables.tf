@@ -1,7 +1,7 @@
 variable "workload" {
   type        = string
   description = "(Required) The workload of the resource created."
-  default = "demo"
+  default     = "demo"
 }
 
 variable "environment" {
