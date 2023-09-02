@@ -10,6 +10,12 @@ variable "environment" {
   default     = "dev"
 }
 
+variable "location" {
+  type        = string
+  description = "(Required) Specifies the supported Azure location where the resource exists. Changing this forces a new resource to be created."
+  default     = "eastus2"
+}
+
 variable "os_type" {
   description = "The O/S type for the App Services to be hosted in this plan. Possible values include Windows, Linux, and WindowsContainer. Changing this forces a new resource to be created."
   type        = string
