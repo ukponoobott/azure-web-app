@@ -1,24 +1,10 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "3.20.0"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {}
-}
-
-
 resource "azurerm_resource_group" "main" {
-  name     = "dev-lab22"
-  location = "eastus2"
+  name     = "rg-${var.workload}-${var.environment}-${var.location}"
+  location = var.location
 }
 
 resource "azurerm_service_plan" "main" {
-  name                = "demo-svc"
+  name                = "asp-${var.workload}-${var.environment}-${var.location}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   os_type             = "Linux"
@@ -26,7 +12,7 @@ resource "azurerm_service_plan" "main" {
 }
 
 resource "azurerm_linux_web_app" "main" {
-  name                = "ukpono-demo-app"
+  name                = "app-${var.workload}-${var.environment}-${var.location}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_service_plan.main.location
   service_plan_id     = azurerm_service_plan.main.id
@@ -44,22 +30,16 @@ resource "azurerm_linux_web_app" "main" {
 
 
 resource "azurerm_app_service_source_control" "example" {
-  app_id   = azurerm_linux_web_app.main.id
-  repo_url = "https://github.com/ukponoobott/test-code"
-  branch   = "main"
+  app_id                 = azurerm_linux_web_app.main.id
+  repo_url               = "https://github.com/ukponoobott/test-code"
+  branch                 = "main"
   use_manual_integration = true
-  
+
 }
 
 resource "azurerm_application_insights" "main" {
-  name                = "tf-test-appinsights"
+  name                = "appi-${var.workload}-${var.environment}-${var.location}"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   application_type    = "web"
-}
-
-
-output "test" {
-    description = "ydydy"
-    value = azurerm_linux_web_app.main.default_hostname
 }
